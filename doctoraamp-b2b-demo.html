@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoctorAmp Pro - Healthcare Practice Management Solutions</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #1B2A3E;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        /* Cookie Consent Banner */
+        #cookieModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #cookieModal.active {
+            display: flex;
+        }
+
+        .cookie-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .cookie-content h2 {
+            color: #0596DE;
+            margin-bottom: 16px;
+            font-size: 24px;
+        }
+
+        .cookie-content p {
+            margin-bottom: 24px;
+            color: #5C6B7C;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .cookie-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cookie-buttons button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .cookie-buttons .accept {
+            background: #0596DE;
+            color: white;
+        }
+
+        .cookie-buttons .accept:hover {
+            background: #047AB8;
+            transform: translateY(-1px);
+        }
+
+        .cookie-buttons .reject {
+            background: #E8EDF2;
+            color: #5C6B7C;
+        }
+
+        .cookie-buttons .reject:hover {
+            background: #D5DCE3;
+        }
+
+        .cookie-buttons .learn-more {
+            background: transparent;
+            color: #0596DE;
+            text-decoration: underline;
+        }
+
+        .blur-content {
+            filter: blur(4px);
+            pointer-events: none;
+        }
+
+        /* Header */
+        header {
+            background: #002B50;
+            color: white;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            font-style: italic;
+            color: white;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-item:hover {
+            color: #0596DE;
+        }
+
+        .nav-item .arrow {
+            font-size: 12px;
+        }
+
+        /* Dropdown Menus */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 24px;
+            min-width: 600px;
+            margin-top: 8px;
+            z-index: 1000;
+        }
+
+        /* Create invisible bridge between nav-item and dropdown */
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: transparent;
+        }
+
+        .nav-item:hover .dropdown-menu {
+            display: grid;
+        }
+
+        .dropdown-2col {
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .dropdown-1col {
+            grid-template-columns: 1fr;
+        }
+
+        .dropdown-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .dropdown-section h3 {
+            color: #0596DE;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dropdown-item {
+            color: #1B2A3E;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: #F0F7FB;
+            color: #0596DE;
+            transform: translateX(4px);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .btn-primary {
+            background: #0596DE;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #047AB8;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #002B50 0%, #004A7C 100%);
+            color: white;
+            padding: 80px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-left h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .hero-left .subtitle {
+            font-size: 18px;
+            color: #B8D4E8;
+            margin-bottom: 16px;
+        }
+
+        .hero-decorations {
+            position: absolute;
+            top: 100px;
+            right: 100px;
+            width: 400px;
+            height: 400px;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .circle-1 {
+            width: 250px;
+            height: 250px;
+            background: #0596DE;
+            top: 0;
+            right: 0;
+            opacity: 0.3;
+        }
+
+        .circle-2 {
+            width: 180px;
+            height: 180px;
+            background: #FDB913;
+            bottom: 0;
+            left: 0;
+            opacity: 0.8;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-card h2 {
+            color: #1B2A3E;
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #5C6B7C;
+            font-size: 14px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D5DCE3;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0596DE;
+            box-shadow: 0 0 0 3px rgba(5, 150, 222, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-note {
+            font-size: 12px;
+            color: #5C6B7C;
+            margin-top: 16px;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 14px;
+            background: #0596DE;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+
+        .form-submit:hover {
+            background: #047AB8;
+            transform: translateY(-1px);
+        }
+
+        .form-submit:disabled {
+            background: #D5DCE3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-help {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 12px;
+            background: #F0F7FB;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #5C6B7C;
+        }
+
+        .form-privacy {
+            font-size: 12px;
+            color: #0596DE;
+            text-decoration: underline;
+            margin-top: 12px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        /* Tabs Section */
+        .tabs-section {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+
+        .tab-navigation {
+            display: flex;
+            gap: 32px;
+            border-bottom: 2px solid #E8EDF2;
+            margin-bottom: 40px;
+        }
+
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 8px;
+            background: none;
+            border: none;
+            color: #5C6B7C;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #0596DE;
+        }
+
+        .tab-btn.active {
+            color: #0596DE;
+            border-bottom-color: #0596DE;
+        }
+
+        .tab-icon {
+            font-size: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Benefits Section */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .benefit-card {
+            text-align: center;
+        }
+
+        .benefit-image {
+            width: 100%;
+            height: 240px;
+            background: #F0F7FB;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .benefit-card h3 {
+            color: #1B2A3E;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .benefit-card p {
+            color: #5C6B7C;
+            font-size: 15px;
+        }
+
+        /* Innovation Banner */
+        .innovation-banner {
+            background: linear-gradient(135deg, #002B50 0%, #004A7C 100%);
+            color: white;
+            padding: 60px;
+            border-radius: 16px;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .innovation-banner h2 {
+            font-size: 32px;
+            margin-bottom: 24px;
+        }
+
+        .innovation-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .innovation-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+        }
+
+        .innovation-feature::before {
+            content: '→';
+            color: #FDB913;
+            font-weight: 700;
+        }
+
+        /* Solutions Grid */
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .solution-card {
+            background: #F0F7FB;
+            padding: 32px;
+            border-radius: 12px;
+        }
+
+        .solution-card h3 {
+            color: #1B2A3E;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .solution-card p {
+            color: #5C6B7C;
+            margin-bottom: 20px;
+        }
+
+        .solution-card .btn {
+            display: inline-block;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: #F0F7FB;
+            padding: 80px 24px;
+            margin-top: 60px;
+        }
+
+        .stats-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-content h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: #1B2A3E;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 24px;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #0596DE;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #5C6B7C;
+            line-height: 1.5;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 0 24px;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #1B2A3E;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #E8EDF2;
+            padding: 24px 0;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1B2A3E;
+        }
+
+        .faq-question:hover {
+            color: #0596DE;
+        }
+
+        .faq-arrow {
+            transition: transform 0.2s;
+        }
+
+        .faq-item.open .faq-arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            display: none;
+            padding-top: 16px;
+            color: #5C6B7C;
+            line-height: 1.7;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #0596DE 0%, #047AB8 100%);
+            color: white;
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 32px;
+            opacity: 0.9;
+        }
+
+        .cta-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cta-card {
+            background: white;
+            color: #1B2A3E;
+            padding: 32px 24px;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .cta-card-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .cta-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .cta-card p {
+            font-size: 14px;
+            color: #5C6B7C;
+            margin-bottom: 20px;
+        }
+
+        .cta-card .btn {
+            font-size: 13px;
+        }
+
+        /* Footer */
+        footer {
+            background: #002B50;
+            color: white;
+            padding: 60px 24px 32px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: #0596DE;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 24px;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+        }
+
+        /* Form Success Message */
+        .success-message {
+            display: none;
+            background: #D4EDDA;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #C3E6CB;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid,
+            .solutions-grid,
+            .stats-grid,
+            .cta-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .dropdown-menu {
+                min-width: 320px;
+            }
+
+            .dropdown-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cookie Consent Modal -->
+    <div id="cookieModal">
+        <div class="cookie-content">
+            <div style="font-size: 40px; margin-bottom: 16px;">🔒</div>
+            <h2>We respect your privacy</h2>
+            <p>We use analytics to improve your experience. Your data, your choice.</p>
+            <div class="cookie-buttons">
+                <button class="accept" onclick="acceptCookies()">ACCEPT</button>
+                <button class="reject" onclick="rejectCookies()">DECLINE</button>
+            </div>
+            <a href="#" class="cookie-buttons learn-more" onclick="event.preventDefault();">Learn more about data privacy</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <a href="#" class="logo" onclick="handleLogoClick(event)">DoctorAmp</a>
+                <nav>
+                    <div class="nav-item">
+                        <span>Discover DoctorAmp</span>
+                        <span class="arrow">▼</span>
+                        <div class="dropdown-menu dropdown-2col">
+                            <div class="dropdown-section">
+                                <h3>Products</h3>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Discover DoctorAmp', 'Products', 'Appointment Management')">Appointment Management</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Discover DoctorAmp', 'Products', 'Patient Messaging')">Patient Messaging</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Discover DoctorAmp', 'Products', 'Practice Analytics')">Practice Analytics</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Discover DoctorAmp', 'Products', 'Billing & Invoicing')">Billing & Invoicing</a>
+                            </div>
+                            <div class="dropdown-section">
+                                <h3>Platform</h3>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Discover DoctorAmp', 'Platform', 'Desktop App')">Desktop App</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Discover DoctorAmp', 'Platform', 'Mobile App')">Mobile App</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Discover DoctorAmp', 'Platform', 'API & Integrations')">API & Integrations</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Discover DoctorAmp', 'Platform', 'Security & Compliance')">Security & Compliance</a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="nav-item" onclick="handleNavClick(event, 'Pricing')">Pricing</a>
+                    <div class="nav-item">
+                        <span>Resources</span>
+                        <span class="arrow">▼</span>
+                        <div class="dropdown-menu dropdown-2col">
+                            <div class="dropdown-section">
+                                <h3>Learn</h3>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Resources', 'Learn', 'Blog')">Blog</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Resources', 'Learn', 'Case Studies')">Case Studies</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Resources', 'Learn', 'Webinars')">Webinars</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Resources', 'Learn', 'Healthcare Guides')">Healthcare Guides</a>
+                            </div>
+                            <div class="dropdown-section">
+                                <h3>Support</h3>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Resources', 'Support', 'Help Center')">Help Center</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Resources', 'Support', 'Documentation')">Documentation</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Resources', 'Support', 'Training Videos')">Training Videos</a>
+                                <a href="#" class="dropdown-item" onclick="handleDropdownClick(event, 'Resources', 'Support', 'Contact Support')">Contact Support</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="header-buttons">
+                    <a href="#" class="btn btn-secondary" onclick="handleBookAppointmentClick(event)">Book Appointment</a>
+                    <a href="#contact" class="btn btn-primary" onclick="handleTalkToAdvisorClick(event)">Talk to an Advisor</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-decorations">
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-left">
+                    <div class="subtitle">DoctorAmp Pro</div>
+                    <h1>A new way to run your practice</h1>
+                </div>
+                <div class="form-card">
+                    <h2>Talk to an Advisor</h2>
+                    <div id="successMessage" class="success-message">
+                        ✓ Thank you! Your inquiry has been submitted successfully. Our team will contact you shortly.
+                    </div>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="inquiry">Inquiry type *</label>
+                            <select id="inquiry" name="inquiry" required>
+                                <option value="">Select an option</option>
+                                <option value="healthcare_provider">I'm a healthcare provider interested in DoctorAmp</option>
+                                <option value="existing_customer">I'm an existing customer</option>
+                                <option value="patient">I'm a patient looking to book</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First name *</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last name *</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Mobile phone *</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="postal">Practice postal code *</label>
+                                <input type="text" id="postal" name="postal" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="specialty">Specialty *</label>
+                            <select id="specialty" name="specialty" required>
+                                <option value="">Select your specialty</option>
+                                <option value="general_practice">General Practice</option>
+                                <option value="dentistry">Dentistry</option>
+                                <option value="physiotherapy">Physiotherapy</option>
+                                <option value="psychology">Psychology</option>
+                                <option value="dermatology">Dermatology</option>
+                                <option value="cardiology">Cardiology</option>
+                                <option value="pediatrics">Pediatrics</option>
+                                <option value="orthopedics">Orthopedics</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-note">* Required fields</div>
+                        <button type="submit" class="form-submit">Submit Inquiry</button>
+                        <div class="form-help">
+                            <span>👋</span>
+                            <span>Our advisors are here to help you choose the right solution for your practice.</span>
+                        </div>
+                        <a href="#" class="form-privacy" onclick="event.preventDefault();">Learn more about data privacy</a>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabs Section -->
+        <section class="tabs-section">
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="benefits" onclick="handleTabClick('benefits')">
+                    <span class="tab-icon">⭐</span>
+                    <span>Benefits</span>
+                </button>
+                <button class="tab-btn" data-tab="solutions" onclick="handleTabClick('solutions')">
+                    <span class="tab-icon">💼</span>
+                    <span>Solutions</span>
+                </button>
+                <button class="tab-btn" data-tab="innovations" onclick="handleTabClick('innovations')">
+                    <span class="tab-icon">💡</span>
+                    <span>Innovations</span>
+                </button>
+            </div>
+
+            <!-- Benefits Tab -->
+            <div id="benefits" class="tab-content active">
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-image">💰</div>
+                        <h3>Increase your practice revenue</h3>
+                        <p>Optimize your schedule and reduce no-shows with automated reminders and seamless booking.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-image">⚡</div>
+                        <h3>Better work-life balance</h3>
+                        <p>Save time on administrative tasks and focus on what matters most - patient care.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-image">❤️</div>
+                        <h3>Deliver the best care possible</h3>
+                        <p>Provide your patients with modern, convenient healthcare experiences they'll love.</p>
+                    </div>
+                </div>
+
+                <div class="innovation-banner">
+                    <h2>Discover the latest innovations for your practice</h2>
+                    <div class="innovation-features">
+                        <div class="innovation-feature">Streamlined daily practice tools</div>
+                        <div class="innovation-feature">Time saved on consultations</div>
+                        <div class="innovation-feature">More patient autonomy</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="handleInnovationCTAClick('benefits_innovation_banner')">Register for Webinar</button>
+                </div>
+            </div>
+
+            <!-- Solutions Tab -->
+            <div id="solutions" class="tab-content">
+                <div class="solutions-grid">
+                    <div class="solution-card">
+                        <h3>Digital Practice Management</h3>
+                        <p>More peace of mind in your daily practice management.</p>
+                        <button class="btn btn-primary" onclick="handleSolutionCTAClick('Digital Practice Management')">Learn More</button>
+                    </div>
+                    <div class="solution-card">
+                        <h3>Patient Acquisition & Growth</h3>
+                        <p>More visibility and qualified patients for a profitable practice.</p>
+                        <button class="btn btn-primary" onclick="handleSolutionCTAClick('Patient Acquisition & Growth')">Learn More</button>
+                    </div>
+                    <div class="solution-card">
+                        <h3>Provider Collaboration</h3>
+                        <p>Stronger connections with your peers for better quality care.</p>
+                        <button class="btn btn-primary" onclick="handleSolutionCTAClick('Provider Collaboration')">Learn More</button>
+                    </div>
+                    <div class="solution-card">
+                        <h3>Continuity of Care</h3>
+                        <p>A simplified relationship with your patients for better follow-up.</p>
+                        <button class="btn btn-primary" onclick="handleSolutionCTAClick('Continuity of Care')">Learn More</button>
+                    </div>
+                    <div class="solution-card">
+                        <h3>Clinical Decision Support</h3>
+                        <p>Informed decisions to deliver the best possible care.</p>
+                        <button class="btn btn-primary" onclick="handleSolutionCTAClick('Clinical Decision Support')">Learn More</button>
+                    </div>
+                    <div class="solution-card">
+                        <h3>Financial Solutions</h3>
+                        <p>One-click invoicing to secure your revenue.</p>
+                        <button class="btn btn-primary" onclick="handleSolutionCTAClick('Financial Solutions')">Learn More</button>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" onclick="handleTalkToAdvisorBottomClick()">Talk to an Advisor</button>
+                </div>
+            </div>
+
+            <!-- Innovations Tab -->
+            <div id="innovations" class="tab-content">
+                <h2 style="text-align: center; margin-bottom: 40px; font-size: 32px;">AI-powered tools for your practice</h2>
+                <p style="text-align: center; max-width: 800px; margin: 0 auto 60px; font-size: 18px; color: #5C6B7C;">DoctorAmp uses cutting-edge AI to streamline your workflow, automate documentation, and enhance patient care.</p>
+                
+                <div class="solutions-grid">
+                    <div class="solution-card">
+                        <h3>AI Consultation Assistant</h3>
+                        <p>Focus on your patients during consultations - our AI assistant takes notes for you and completes patient records automatically.</p>
+                    </div>
+                    <div class="solution-card">
+                        <h3>Smart Scheduling</h3>
+                        <p>AI-powered appointment optimization that maximizes your availability while reducing patient wait times.</p>
+                    </div>
+                    <div class="solution-card">
+                        <h3>Predictive Analytics</h3>
+                        <p>Get insights into practice trends, patient patterns, and revenue forecasting with advanced analytics.</p>
+                    </div>
+                    <div class="solution-card">
+                        <h3>Automated Follow-ups</h3>
+                        <p>Intelligent patient engagement that sends personalized reminders and health tips automatically.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-content">
+                <h2>Impact statistics*</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">7 M</div>
+                        <div class="stat-label">documents shared online each month, instead of getting lost in paperwork</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">150</div>
+                        <div class="stat-label">fewer calls per week in a practice</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50%</div>
+                        <div class="stat-label">more time spent with your patients instead of on screens</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">19 M</div>
+                        <div class="stat-label">online appointments booked in DoctorAmp each month across Europe</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">20%</div>
+                        <div class="stat-label">more revenue for a provider once onboarded</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-question" onclick="handleFAQClick(this, 'What are your commitments to protecting health data?')">
+                    <span>What are your commitments to protecting health data?</span>
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    DoctorAmp is fully compliant with HIPAA, GDPR, and all applicable healthcare data protection regulations. All data is encrypted in transit and at rest, stored in secure data centers in your region.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="handleFAQClick(this, 'Why will my staff love DoctorAmp?')">
+                    <span>Why will my staff love DoctorAmp?</span>
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    DoctorAmp reduces administrative burden by up to 70%, automates repetitive tasks, and provides an intuitive interface that requires minimal training. Your staff can focus on patient care instead of paperwork.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="handleFAQClick(this, 'Why is DoctorAmp suitable for my organization?')">
+                    <span>Why is DoctorAmp suitable for my organization?</span>
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Whether you're a solo practitioner or a multi-site clinic, DoctorAmp scales to meet your needs. Our flexible platform works for all specialties and practice sizes.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="handleFAQClick(this, 'My patients are already using DoctorAmp. What are the key statistics?')">
+                    <span>My patients are already using DoctorAmp. What are the key statistics?</span>
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Over 60 million patients across Europe use DoctorAmp to manage their healthcare. 94% patient satisfaction rating, with an average booking time of just 2 minutes.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="handleFAQClick(this, 'How do I install DoctorAmp solutions in my practice?')">
+                    <span>How do I install DoctorAmp solutions in my practice?</span>
+                    <span class="faq-arrow">▼</span>
+                </div>
+                <div class="faq-answer">
+                    We provide personalized onboarding with a dedicated advisor who guides you through data migration, staff training, and system setup. Most practices are fully operational within 2 weeks.
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2>Get started with confidence!</h2>
+            <p>Everything you need to modernize your practice</p>
+            <div class="cta-cards">
+                <div class="cta-card">
+                    <div class="cta-card-icon">📦</div>
+                    <h3>Installation</h3>
+                    <p>Benefit from personalized training with a dedicated advisor who will migrate your data. Your solution is ready for use!</p>
+                    <button class="btn btn-primary" onclick="handleCTACardClick('Installation')">Learn More</button>
+                </div>
+                <div class="cta-card">
+                    <div class="cta-card-icon">💬</div>
+                    <h3>Customer Service</h3>
+                    <p>Enjoy 24/7 support to get your answers within seconds. Also get personalized advice by booking with your dedicated advisor.</p>
+                    <button class="btn btn-primary" onclick="handleCTACardClick('Customer Service')">Learn More</button>
+                </div>
+                <div class="cta-card">
+                    <div class="cta-card-icon">💳</div>
+                    <h3>Pricing</h3>
+                    <p>Our prices are clear and transparent. You can subscribe without commitment.</p>
+                    <button class="btn btn-primary" onclick="handleCTACardClick('Pricing')">Learn More</button>
+                </div>
+                <div class="cta-card">
+                    <div class="cta-card-icon">🔒</div>
+                    <h3>Security</h3>
+                    <p>All data is hosted in compliance with HIPAA and GDPR requirements on certified HDS servers located in France and Germany.</p>
+                    <button class="btn btn-primary" onclick="handleCTACardClick('Security')">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <div class="footer-links">
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Features')">Features</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Pricing')">Pricing</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Security')">Security</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Roadmap')">Roadmap</a>
+                        </div>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <div class="footer-links">
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'About Us')">About Us</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Careers')">Careers</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Press')">Press</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Contact')">Contact</a>
+                        </div>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <div class="footer-links">
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Blog')">Blog</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Help Center')">Help Center</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'API Documentation')">API Documentation</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Status')">Status</a>
+                        </div>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <div class="footer-links">
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Privacy Policy')">Privacy Policy</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Terms of Service')">Terms of Service</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'Cookie Policy')">Cookie Policy</a>
+                            <a href="#" class="footer-link" onclick="handleFooterLinkClick(event, 'GDPR')">GDPR</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    © 2024 DoctorAmp. All rights reserved. Built with ❤️ for healthcare providers.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Amplitude SDK - Manual Loading for GDPR Compliance -->
+    <script src="https://cdn.amplitude.com/libs/analytics-browser-2.11.2-min.js.gz"></script>
+    <script src="https://cdn.amplitude.com/libs/plugin-session-replay-browser-1.20.1-min.js.gz"></script>
+
+    <script>
+        // AMPLITUDE CONFIGURATION
+        const AMPLITUDE_API_KEY = '921f06963b222b4335d978b5afca529b';
+        let isAmplitudeInitialized = false;
+
+        // Initialize Amplitude after cookie consent
+        function initializeAmplitude() {
+            if (isAmplitudeInitialized) return;
+
+            // Add Session Replay plugin
+            window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));
+
+            // Initialize Amplitude with selective autocapture
+            window.amplitude.init(AMPLITUDE_API_KEY, {
+                fetchRemoteConfig: true,
+                autocapture: {
+                    attribution: true,
+                    pageViews: true,
+                    sessions: true,
+                    formInteractions: false,
+                    elementInteractions: false,
+                    fileDownloads: false
+                }
+            });
+
+            isAmplitudeInitialized = true;
+            console.log('Amplitude initialized successfully');
+        }
+
+        // Cookie Consent Functions
+        function acceptCookies() {
+            localStorage.setItem('cookie_consent', 'accepted');
+            document.getElementById('cookieModal').classList.remove('active');
+            document.getElementById('mainContent').classList.remove('blur-content');
+            
+            // Initialize Amplitude
+            initializeAmplitude();
+        }
+
+        function rejectCookies() {
+            localStorage.setItem('cookie_consent', 'rejected');
+            document.getElementById('cookieModal').classList.remove('active');
+            document.getElementById('mainContent').classList.remove('blur-content');
+            console.log('❌ Cookies rejected - Amplitude will not initialize');
+        }
+
+        // Check cookie consent on page load
+        function checkCookieConsent() {
+            const consent = localStorage.getItem('cookie_consent');
+            if (consent === 'accepted') {
+                console.log('✅ Previous consent found - initializing Amplitude');
+                initializeAmplitude();
+            } else if (consent === 'rejected') {
+                console.log('❌ User previously rejected cookies - Amplitude will not initialize');
+            } else {
+                console.log('🍪 No consent found - showing cookie modal');
+                document.getElementById('cookieModal').classList.add('active');
+                document.getElementById('mainContent').classList.add('blur-content');
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            console.log('📄 DoctorAmp B2B page loaded');
+            console.log('⏳ Amplitude SDK loaded but NOT initialized - waiting for cookie consent...');
+            checkCookieConsent();
+        });
+
+        // Also check on DOMContentLoaded as backup
+        document.addEventListener('DOMContentLoaded', function() {
+            checkCookieConsent();
+        });
+
+        // Helper function to track events
+        function trackEvent(eventName, eventProperties = {}) {
+            if (isAmplitudeInitialized) {
+                window.amplitude.track(eventName, eventProperties);
+            }
+        }
+
+        // NAVIGATION EVENT TRACKING
+
+        // Logo click
+        function handleLogoClick(event) {
+            event.preventDefault();
+            trackEvent('Logo Clicked');
+        }
+
+        // Main nav link click
+        function handleNavClick(event, navItem) {
+            event.preventDefault();
+            trackEvent('Navigation Item Clicked', {
+                nav_item: navItem
+            });
+        }
+
+        // Dropdown item click
+        function handleDropdownClick(event, menuName, dropdownCategory, itemName) {
+            event.preventDefault();
+            trackEvent('Dropdown Item Clicked', {
+                menu_name: menuName,
+                dropdown_category: dropdownCategory,
+                item_name: itemName
+            });
+        }
+
+        // Header CTA buttons
+        function handleBookAppointmentClick(event) {
+            event.preventDefault();
+            trackEvent('Book Appointment Clicked', {
+                location: 'header'
+            });
+        }
+
+        function handleTalkToAdvisorClick(event) {
+            event.preventDefault();
+            trackEvent('Talk to Advisor Clicked', {
+                location: 'header'
+            });
+            // Scroll to form
+            document.querySelector('.form-card').scrollIntoView({behavior: 'smooth'});
+        }
+
+        // FORM EVENT TRACKING
+        
+        let formStarted = false;
+        let formStartTime = null;
+
+        // Track form interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('contactForm');
+            if (!form) return;
+
+            const formFields = form.querySelectorAll('input, select, textarea');
+            
+            // Track "Form Started" only once on first interaction with any field
+            formFields.forEach(field => {
+                field.addEventListener('focus', function() {
+                    if (!formStarted) {
+                        formStarted = true;
+                        formStartTime = Date.now();
+                        
+                        trackEvent('Form Started', {
+                            first_field_interacted: this.name || this.id
+                        });
+                    }
+                });
+            });
+
+            // Track form submission with rich properties
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(form);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+
+                // Calculate time to complete (if form was started)
+                const timeToComplete = formStartTime ? Math.round((Date.now() - formStartTime) / 1000) : null;
+
+                trackEvent('Contact Form Submitted', {
+                    inquiry_type: formObject.inquiry,
+                    specialty: formObject.specialty,
+                    postal_code: formObject.postal,
+                    time_to_complete_seconds: timeToComplete,
+                    has_first_name: !!formObject.firstName,
+                    has_last_name: !!formObject.lastName,
+                    has_email: !!formObject.email,
+                    has_phone: !!formObject.phone
+                });
+
+                // Show success message
+                document.getElementById('successMessage').classList.add('show');
+                form.reset();
+                
+                // Reset form started state
+                formStarted = false;
+                formStartTime = null;
+                
+                // Scroll to success message
+                document.getElementById('successMessage').scrollIntoView({behavior: 'smooth'});
+            });
+        });
+
+        // TAB NAVIGATION
+        function handleTabClick(tabName) {
+            // Update active tab button
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.tab-btn').classList.add('active');
+
+            // Show active content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+
+            // Track specific event based on tab
+            let eventName;
+            if (tabName === 'benefits') {
+                eventName = 'Benefits Clicked';
+            } else if (tabName === 'solutions') {
+                eventName = 'Solutions Clicked';
+            } else if (tabName === 'innovations') {
+                eventName = 'Innovations Clicked';
+            }
+            
+            if (eventName) {
+                trackEvent(eventName);
+            }
+        }
+
+        // CTA TRACKING
+        function handleInnovationCTAClick(location) {
+            trackEvent('Innovation CTA Clicked', {
+                cta_text: 'Register for Webinar',
+                location: location
+            });
+        }
+
+        function handleSolutionCTAClick(solutionName) {
+            trackEvent('Solution CTA Clicked', {
+                solution_name: solutionName,
+                cta_text: 'Learn More'
+            });
+        }
+
+        function handleTalkToAdvisorBottomClick() {
+            trackEvent('Talk to Advisor Clicked', {
+                location: 'solutions_tab'
+            });
+            document.querySelector('.form-card').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function handleCTACardClick(cardType) {
+            trackEvent('CTA Card Clicked', {
+                card_type: cardType
+            });
+        }
+
+        // FAQ TRACKING
+        function handleFAQClick(element, question) {
+            const faqItem = element.parentElement;
+            const wasOpen = faqItem.classList.contains('open');
+            
+            faqItem.classList.toggle('open');
+
+            // Only track when opening
+            if (!wasOpen) {
+                trackEvent('FAQ Item Opened', {
+                    question: question
+                });
+            }
+        }
+
+        // FOOTER TRACKING
+        function handleFooterLinkClick(event, linkName) {
+            event.preventDefault();
+            trackEvent('Footer Link Clicked', {
+                link_name: linkName
+            });
+        }
+    </script>
+</body>
+</html>
+
